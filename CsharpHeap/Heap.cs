@@ -11,6 +11,11 @@ namespace CsharpHeap
     /// </summary>
     public abstract class Heap<T>
     {
+
+        public enum ChildSide
+        {
+            Left, Right
+        }
         /// <summary>
         /// Returns number of elements in heap.
         /// </summary>
@@ -49,5 +54,31 @@ namespace CsharpHeap
         /// Pops root from the heap.
         /// </summary>
         public abstract T Pop();
+
+        /// <summary>
+        /// Gets parent node of current node.
+        /// </summary>
+        /// <returns>Parent Node</returns>
+        public abstract T Parent();
+
+        /// <summary>
+        /// Get child node of current node. With given side.
+        /// </summary>
+        /// <param name="side">Left or Right</param>
+        /// <returns>Child Node</returns>
+        public abstract T Child(ChildSide side);
+
+        /// <summary>
+        /// Get index of current node. If node was deleted return -1
+        /// </summary>
+        /// <returns>Index of current node</returns>
+        public abstract int Current();
+
+        /// <summary>
+        /// Jump to selected node at given index
+        /// </summary>
+        /// <param name="index">Index of node in the heap</param>
+        /// <returns>Index of node</returns>
+        public abstract int MoveOn(int index);
     }
 }
