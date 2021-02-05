@@ -80,5 +80,6 @@ namespace CsharpHeap
         /// <param name="index">Index of node in the heap</param>
         /// <returns>Index of node</returns>
         public abstract int MoveOn(int index);
+
     }
 }
