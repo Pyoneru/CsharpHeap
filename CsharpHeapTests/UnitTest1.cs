@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using CsharpHeap;
 using System;
 
 namespace CsharpHeapTests

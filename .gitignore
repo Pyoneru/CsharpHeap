@@ -1,3 +1,5 @@
 .vs
 ./CsharpHeap/bin/*
 ./CsharpHeap/obj/*
+./CsharpHeap/Tests/*
+./CsharpHeap/Tests/*
