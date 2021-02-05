@@ -11,7 +11,6 @@ namespace CsharpHeap
     /// </summary>
     public abstract class Heap<T>
     {
-
         public enum ChildSide
         {
             Left, Right

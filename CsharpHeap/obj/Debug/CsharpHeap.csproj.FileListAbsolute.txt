@@ -5,3 +5,10 @@ D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.csprojAssemblyReference.ca
 D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.csproj.CoreCompileInputs.cache
 D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.exe
 D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.pdb
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\bin\Debug\CsharpHeap.exe.config
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\bin\Debug\CsharpHeap.exe
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\bin\Debug\CsharpHeap.pdb
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.csprojAssemblyReference.cache
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.csproj.CoreCompileInputs.cache
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.exe
+D:\Warsztat\Programowanie\Source\Repos\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.pdb
