@@ -65,12 +65,20 @@ namespace CsharpHeapTests
             Assert.AreEqual(val[7], left.ChildLeft.Value); // ->left
             Assert.AreEqual(val[8], left.ChildRight.Value); // ->right
 
-            right = left.ChildRight;
+            right = left.Parent.ChildRight;
             // left->right->left branch
-            Assert.AreEqual(val[9], left.ChildLeft.Value);
+            Assert.AreEqual(val[9], right.ChildLeft.Value);
 
             // left->right->right should be null
-            Assert.IsNull(left.ChildRight.Value);     
+            Assert.IsNull(right.ChildRight);     
+        }
+
+        [TestMethod]
+        public void CreateTreeWithNoArgTest()
+        {
+            Node tree = Node.CreateTree(new int[0]);
+
+            Assert.IsNull(tree);
         }
 
         [TestMethod]
