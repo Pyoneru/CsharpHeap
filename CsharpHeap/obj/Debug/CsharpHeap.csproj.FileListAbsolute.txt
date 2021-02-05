@@ -1,7 +1,0 @@
-D:\CiSZarp\CsharpHeap\CsharpHeap\bin\Debug\CsharpHeap.exe.config
-D:\CiSZarp\CsharpHeap\CsharpHeap\bin\Debug\CsharpHeap.exe
-D:\CiSZarp\CsharpHeap\CsharpHeap\bin\Debug\CsharpHeap.pdb
-D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.csprojAssemblyReference.cache
-D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.csproj.CoreCompileInputs.cache
-D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.exe
-D:\CiSZarp\CsharpHeap\CsharpHeap\obj\Debug\CsharpHeap.pdb

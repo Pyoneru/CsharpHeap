@@ -10,6 +10,10 @@ using Node = CsharpHeap.NodeHeap<int>.Node;
 
 namespace CsharpHeapTests
 {
+    /// <summary>
+    /// Test class for testing internal Node class in NodeHeap class.
+    /// All tests using int type as generic T type.
+    /// </summary>
     [TestClass]
     public class NodeHeapNodeTest
     {
@@ -18,6 +22,12 @@ namespace CsharpHeapTests
          * Allias for NodeHeap<int>.Node above.
          * using Node = CsharpHeap.NodeHeap<int>.Node;
          */
+
+        #region Constructor Tests
+        
+        /// <summary>
+        /// Value proprtie should be set to given value in constructor.
+        /// </summary>
         [TestMethod]
         public void ArgConstructorNodeTest()
         {
@@ -26,6 +36,10 @@ namespace CsharpHeapTests
             Assert.AreEqual(5, node.Value);
         }
 
+        /// <summary>
+        /// Constructor without any parameters.
+        /// Value proprties should be null(default)
+        /// </summary>
         [TestMethod]
         public void EmptyContructorNodeTest()
         {
@@ -34,6 +48,13 @@ namespace CsharpHeapTests
             Assert.AreEqual(default(int), node.Value);
         }
 
+        #endregion
+
+        #region CreateTree Tests
+
+        /// <summary>
+        /// Prepare array with values and create Node Tree based on this array with CreateTree method.
+        /// </summary>
         [TestMethod]
         public void CreateTreeTest()
         {
@@ -73,6 +94,9 @@ namespace CsharpHeapTests
             Assert.IsNull(right.ChildRight);     
         }
 
+        /// <summary>
+        /// If we provide empty array(empty but not null), method should return null.
+        /// </summary>
         [TestMethod]
         public void CreateTreeWithNoArgTest()
         {
@@ -81,6 +105,13 @@ namespace CsharpHeapTests
             Assert.IsNull(tree);
         }
 
+        #endregion
+
+        #region IsHeapNode Test
+
+        /// <summary>
+        /// If Node has both children(both are not null) then return true.
+        /// </summary>
         [TestMethod]
         public void IsHeapNodeBothChildrenTest()
         {
@@ -91,6 +122,9 @@ namespace CsharpHeapTests
             Assert.IsTrue(tree.IsHeapNode());
         }
 
+        /// <summary>
+        /// If Node has only left child, return true.
+        /// </summary>
         [TestMethod]
         public void IsHeapNodeWithLeftChildOnlyTest()
         {
@@ -100,6 +134,9 @@ namespace CsharpHeapTests
             Assert.IsTrue(tree.IsHeapNode());
         }
 
+        /// <summary>
+        /// If Node has right child, but not has left child, then return false.
+        /// </summary>
         public void IsNotHeapNodeWithRightChildOnlyTest()
         {
             Node tree = new Node(5);
@@ -107,5 +144,7 @@ namespace CsharpHeapTests
 
             Assert.IsFalse(tree.IsHeapNode());
         }
+
+        #endregion
     }
 }
