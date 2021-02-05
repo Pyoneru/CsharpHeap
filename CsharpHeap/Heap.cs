@@ -9,7 +9,7 @@ namespace CsharpHeap
     /// <summary>
     /// Provides basic heap functionalities
     /// </summary>
-    public abstract class Heap<T>
+    public abstract class Heap<T> where T : IComparable
     {
 
         public enum ChildSide
