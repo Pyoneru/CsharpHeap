@@ -19,12 +19,12 @@ namespace CsharpHeap
         /// <summary>
         /// Returns number of elements in heap.
         /// </summary>
-        public abstract int Count { get; }
+        public abstract int Count { get; protected set; }
 
         /// <summary>
         /// Return levels of current heap.
         /// </summary>
-        public abstract int Level { get; }
+        public abstract int Level { get; protected set; }
 
         /// <summary>
         /// Gets or sets maximum size of heap. If returned value equals to -1, the size is managed dynamically.

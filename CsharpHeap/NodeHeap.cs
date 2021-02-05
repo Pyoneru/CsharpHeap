@@ -6,13 +6,27 @@ using System.Threading.Tasks;
 
 namespace CsharpHeap
 {
+    public enum MinMax
+    {
+        MIN, MAX
+    }
+
     public class NodeHeap<T> : Heap<T> where T : IComparable
     {
-        public override int Count => throw new NotImplementedException();
-
-        public override int Level => throw new NotImplementedException();
-
+        public override int Count { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override int Level { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
         public override int MaxSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public NodeHeap(MinMax minMax)
+        {
+
+        }
+
+        public T this[int index]
+        {
+            get { return default(T); }
+            set { }
+        }
 
         public override T Child(ChildSide side)
         {
