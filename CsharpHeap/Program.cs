@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using CsharpHeap;
 
 namespace CsharpHeap
 {
@@ -13,9 +14,9 @@ namespace CsharpHeap
         {
             ArrayMinHeap<BigInteger> arrayMinHeap = new ArrayMinHeap<BigInteger>();
             Random random = new Random();
-            for (int k = 0; k < 7; k++)
+            for (int k = 0; k < 1000000; k++)
             {
-                arrayMinHeap.Push(random.Next(0,1024));
+                arrayMinHeap.Push(random.Next(0, 1024));
             }
             int i = 0;
             while (true)
@@ -31,7 +32,6 @@ namespace CsharpHeap
                 }
                 i++;
             }
-            Console.ReadKey();
         }
     }
 }

@@ -10,30 +10,46 @@ namespace CsharpHeap
     class ArrayMinHeap<T> : Heap<T> where T : IComparable
     {
         #region Properties
+        /// <summary>
+        /// Returns number of elements contained within the heap.
+        /// </summary>
         public override int Count { get; protected set; }
 
-        public override int MaxSize { get; set; }
+        /// <summary>
+        /// An internal array holding all elements contained within the heap.
+        /// </summary>
+        private T[] Items;
 
-        private T[] Items { get; set; }
-
+        /// <summary>
+        /// Returns level of the heap.
+        /// </summary>
         public override int Level { get; protected set; }
+
+        /// <summary>
+        /// Maximum size for future static implementation. Do not use.
+        /// </summary>
+        public override int MaxSize { 
+            get => throw new NotImplementedException("Proszę tego nie używać.");
+            set => throw new NotImplementedException("Proszę tego nie używać.");
+        }
         #endregion
 
         #region Constructors and indexers
+        /// <summary>
+        /// Initializes a new, empty instance of ArrayMinHeap class.
+        /// </summary>
         public ArrayMinHeap()
         {
             this.Count = 0;
-            this.MaxSize = 1;
-            Items = new T[MaxSize];
+            this.Level = 0;
+            Items = new T[1];
         }
 
-        public ArrayMinHeap(int maxSize)
-        {
-            this.Count = 0;
-            this.MaxSize = maxSize;
-            Items = new T[MaxSize];
-        }
-
+        /// <summary>
+        /// Gets element associated with the specified index.
+        /// </summary>
+        /// <param name="index">Index of item to be returned.</param>
+        /// <returns></returns>
         public T this[int index]
         {
             get
@@ -49,30 +65,59 @@ namespace CsharpHeap
 
         #region Methods
         /// <summary>
-        /// Returns possible index of left side child. Requires boundary check.
+        /// Updates heap internal level property.
+        /// </summary>
+        private void UpdateHeapLevel()
+        {
+            if (Count == 0) Level = 0;
+            else Level = (int)Math.Floor(Math.Log(Count, 2));
+        }
+        /// <summary>
+        /// Returns value indicating whether a node at given index exists.
+        /// </summary>
+        /// <param name="index">Index of item to check.</param>
+        private Boolean HasElementAtIndex(int index)
+        {
+            return index < Count ? true : false;
+        }
+
+        /// <summary>
+        /// Returns index of left side child if it exists.
         /// </summary>
         /// <param name="parentIndex">Index of a parent.</param>
         public int GetLeftChildIndex(int parentIndex)
         {
-            return 2 * parentIndex + 1;
+            if(HasElementAtIndex(parentIndex))
+            {
+                return 2 * parentIndex + 1;
+            }
+            throw new IndexOutOfRangeException("Parent at given index does not exist.");
         }
 
         /// <summary>
-        /// Returns possible index of right side child. Requires boundary check.
+        /// Returns index of right side child if it exists.
         /// </summary>
         /// <param name="parentIndex">Index of a parent.</param>
         public int GetRightChildIndex(int parentIndex)
         {
-            return 2 * parentIndex + 2;
+            if (HasElementAtIndex(parentIndex))
+            {
+                return 2 * parentIndex + 2;
+            }
+            throw new IndexOutOfRangeException("Parent at given index does not exist.");
         }
 
         /// <summary>
-        /// Returns possible parent of a child at given index. Requires checking if child has parent.
+        /// Returns parent of a child at given index if it exists.
         /// </summary>
         /// <param name="childIndex">Index of a child.</param>
         public int GetParentIndex(int childIndex)
         {
-            return (int)Math.Floor((childIndex - 1) / 2.0);
+            if (HasElementAtIndex(childIndex))
+            {
+                return (int)Math.Floor((childIndex - 1) / 2.0);
+            }
+            throw new IndexOutOfRangeException("Child at given index does not exist.");
         }
 
         /// <summary>
@@ -85,7 +130,7 @@ namespace CsharpHeap
         }
 
         /// <summary>
-        /// Returns value indicating whether a parent has a right child.
+        /// Returns value indicating whether a parent has a left child.
         /// </summary>
         /// <param name="parentIndex">Index of a parent.</param>
         public Boolean HasRightChild(int parentIndex)
@@ -94,9 +139,9 @@ namespace CsharpHeap
         }
 
         /// <summary>
-        /// Returns value indicating whether a parent has a right child.
+        /// Returns value indicating whether a child has a parent.
         /// </summary>
-        /// <param name="parentIndex">Index of a parent.</param>
+        /// <param name="childIndex">Index of a child.</param>
         public Boolean HasParent(int childIndex)
         {
             return GetParentIndex(childIndex) >= 0;
@@ -144,10 +189,9 @@ namespace CsharpHeap
         /// </summary>
         private void ExpandHeap()
         {
-            if(Count == MaxSize)
+            if (Count == Items.Length)
             {
-                MaxSize = MaxSize * 2;
-                T[] expandedArray = new T[MaxSize];
+                T[] expandedArray = new T[2 * Items.Length];
                 for (int i = 0; i < Count; i++)
                 {
                     expandedArray[i] = Items[i];
@@ -177,12 +221,13 @@ namespace CsharpHeap
         {
             if (Count == 0)
             {
-                throw new InvalidOperationException("Heap does not contain elements to be Popped");
+                throw new InvalidOperationException("Heap does not contain elements to be popped");
             }
             T root = Items[0];
             Items[0] = Items[Count - 1];
             Count--;
             HeapifyDown();
+            UpdateHeapLevel();
             return root;
         }
 
@@ -198,11 +243,12 @@ namespace CsharpHeap
             try
             {
                 HeapifyUp();
-                return 0;
+                UpdateHeapLevel();
+                return 0; // return 0 whether HeapifyUp was successful
             }
             catch
             {
-                return 1;
+                return 1; // return 1 whether HeapifyUp thrown an error
             }
         }
 
@@ -215,12 +261,12 @@ namespace CsharpHeap
             while (HasLeftChild(index))
             {
                 int smallerChildIndex = GetLeftChildIndex(index);
-                if(HasRightChild(index) && GetRightChild(index).CompareTo(GetLeftChild(index)) < 0)
+                if (HasRightChild(index) && GetRightChild(index).CompareTo(GetLeftChild(index)) < 0)
                 {
                     smallerChildIndex = GetRightChildIndex(index);
                 }
-                
-                if(Items[index].CompareTo(Items[smallerChildIndex]) < 0)
+
+                if (Items[index].CompareTo(Items[smallerChildIndex]) < 0)
                 {
                     break;
                 }
