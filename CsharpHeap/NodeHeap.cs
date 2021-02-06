@@ -16,6 +16,7 @@ namespace CsharpHeap
         protected MinMax minMax;
         protected Node tree;
         protected Node current;
+        protected int lastIndex;
 
         public override int Count { get; protected set; }
         public override int Level { get; protected set; }
@@ -28,10 +29,10 @@ namespace CsharpHeap
         public NodeHeap(MinMax minMax)
         {
             this.minMax = minMax;
-            this.tree = new Node(0);
             this.current = tree;
             this.Count = 0;
-            this.Level = 0;
+            this.Level = -1;
+            this.lastIndex = 0;
         }
 
         public T this[int index]
@@ -41,26 +42,44 @@ namespace CsharpHeap
                     return tree.Value;
                 else
                 {
-                    if (index % 2 == 1) index++;
-                    int level = (int)Math.Log(index, 2);
-                    int[] path = new int[level]; // if number is even then move right, otherwise move left
+                    int[] path = PathFromRootToIndex(index);
 
-                    path[level - 1] = index;
-                    for(int i = level-2; i >= 0; i--)
-                    {
-                        path[i] = GetParentIndex(path[i + 1]);
-                    }
-
-                    Node mover = tree;
-                    for(int i = 0; i < level; i++)
-                    {
-                        // If value is even then move to right child, if is odd, move to left child
-                        if (path[i] % 2 == 0) mover = mover.ChildRight;
-                        else mover = mover.ChildLeft;
-                    }
-                    return mover.Value;
+                    Node node = MoveToNodeByPath(path);
+                    return node.Value;
                 }
             }
+        }
+
+        private int[] PathFromRootToIndex(int index)
+        {
+            int level = (int)Math.Log(
+                (index %2 == 1) ? index +1 : index, 
+                2
+                );
+            int[] path = new int[level]; // if number is even then move right, otherwise move left
+
+            path[level - 1] = index;
+            for (int i = level - 2; i >= 0; i--)
+            {
+                path[i] = GetParentIndex(path[i + 1]);
+            }
+            return path;
+        }
+
+        private Node MoveToNodeByPath(int[] path)
+        {
+            Node mover = tree;
+            for (int i = 0; i < path.Length; i++)
+            {
+                T x = mover.Value;
+                // If value is even then move to right child, if is odd, move to left child
+                if (path[i] % 2 == 0) 
+                    mover = mover.ChildRight;
+                else 
+                    mover = mover.ChildLeft;
+                x = mover.Value;
+            }
+            return mover;
         }
 
         private int GetParentIndex(int index)
@@ -70,12 +89,23 @@ namespace CsharpHeap
 
         public override T Child(ChildSide side)
         {
-            throw new NotImplementedException();
+            if(side == ChildSide.Left && current.ChildLeft != null)
+            {
+                current = current.ChildLeft;
+                return current.Value;
+            }else if(current.ChildRight != null)
+            {
+                current = current.ChildRight;
+                return current.Value;
+            }
+            return default(T);
         }
 
         public override int Current()
         {
-            throw new NotImplementedException("");
+            if(current != null)
+                return this.current.Index;
+            return -1;
         }
 
         public override int MoveOn(int index)
@@ -85,7 +115,12 @@ namespace CsharpHeap
 
         public override T Parent()
         {
-            throw new NotImplementedException();
+            if(current.Parent != null)
+            {
+                current = current.Parent;
+                return current.Value;
+            }
+            return default(T);
         }
 
         public override T Pop()
@@ -95,7 +130,46 @@ namespace CsharpHeap
 
         public override int Push(T obj)
         {
-            throw new NotImplementedException();
+            if (tree == null)
+            {
+                tree = new Node(0, obj);
+                current = tree;
+                Count++;
+                UpdateLevel();
+            }
+            else
+            {
+                Node last = MoveToLastNode();
+                Node node;
+                if (last.ChildLeft == null)
+                {
+                    last.ChildLeft = new Node(++lastIndex, obj);
+                    last.ChildLeft.Parent = last;
+                    node = last.ChildLeft;
+                }
+                else 
+                {
+                    last.ChildRight = new Node(++lastIndex, obj);
+                    last.ChildRight.Parent = last;
+                    node = last.ChildRight;
+                }
+                
+                Count++;
+                UpdateLevel();
+                while (Swap(node))
+                {
+                    if ((node.ChildLeft != null && !Swap(node.ChildLeft)) || 
+                        (node.ChildRight != null && !Swap(node.ChildRight)))
+                    {
+                        if (node.Parent != null)
+                            node = node.Parent;
+                        else break;
+                    }
+                }
+            }
+
+
+            return 0;
         }
 
         public override int Push(T obj, int index)
@@ -103,9 +177,70 @@ namespace CsharpHeap
             throw new NotImplementedException("Proszę tego nie używać.");
         }
 
+        private bool Swap(Node target)
+        {
+            if (target.Parent == null) return false;
+            if(minMax == MinMax.MAX)
+            {
+                Node parent = target.Parent;
+                if(target.Value.CompareTo(parent.Value) > 0)
+                {
+                    (parent.Value, target.Value) = (target.Value, parent.Value);
+                }
+                else return false;
+            }
+            else
+            {
+                Node parent = target.Parent;
+                if(target.Value.CompareTo(parent.Value) < 0)
+                {
+                    (parent.Value, target.Value) = (target.Value, parent.Value);
+                }
+                else return false;
+            }
+
+            return true;
+        }
+
+        private Node MoveToLastNode(Node node)
+        {
+        }
+
+        private Node MoveToEndNode()
+        {
+            Node node = tree;
+
+            while (node.ChildRight != null) node = node.ChildRight;
+            if (node.ChildLeft != null) node = node.ChildLeft;
+
+            return node;
+        }
+
+        private void UpdateLevel()
+        {
+            if(tree != null)
+            {
+                Node node = tree;
+                int lvl = 0;
+                while(node.ChildLeft != null)
+                {
+                    node = node.ChildLeft;
+                    lvl++;
+                }
+                Level = lvl;
+            }
+        }
+
         public override T Seek(int index)
         {
-            throw new NotImplementedException();
+            if (index != 0)
+            {
+                int[] path = PathFromRootToIndex(index);
+
+                Node node = MoveToNodeByPath(path);
+                return node.Value;
+            }
+            return tree.Value;
         }
 
         public class Node
