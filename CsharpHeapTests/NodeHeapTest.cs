@@ -71,7 +71,7 @@ namespace CsharpHeapTests
         {
             Heap heap = new Heap(MinMax.MIN);
 
-            Assert.AreEqual(0, heap.Current());
+            Assert.AreEqual(-1, heap.Current());
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace CsharpHeapTests
             Assert.AreEqual(default(int), parent);
 
             // Current pointer should stay on root node.
-            Assert.AreEqual(0, heap.Current());
+            Assert.AreEqual(-1, heap.Current());
         }
 
         #endregion Parent Method
@@ -271,7 +271,7 @@ namespace CsharpHeapTests
             Assert.AreEqual(3, heap.Seek(2));
             Assert.AreEqual(7, heap.Seek(3));
             Assert.AreEqual(5, heap.Seek(4));
-            Assert.AreEqual(6, heap.Seek(6));
+            Assert.AreEqual(6, heap.Seek(5));
 
         }
 

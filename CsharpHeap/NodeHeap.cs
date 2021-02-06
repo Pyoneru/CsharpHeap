@@ -14,7 +14,7 @@ namespace CsharpHeap
     public class NodeHeap<T> : Heap<T> where T : IComparable
     {
         protected MinMax minMax;
-        protected Node tree;
+        protected Node root;
         protected Node current;
         protected int lastIndex;
 
@@ -29,17 +29,17 @@ namespace CsharpHeap
         public NodeHeap(MinMax minMax)
         {
             this.minMax = minMax;
-            this.current = tree;
+            this.current = root;
             this.Count = 0;
             this.Level = -1;
-            this.lastIndex = 0;
+            this.lastIndex = -1;
         }
 
         public T this[int index]
         {
             get {
                 if (index == 0)
-                    return tree.Value;
+                    return root.Value;
                 else
                 {
                     int[] path = PathFromRootToIndex(index);
@@ -68,16 +68,14 @@ namespace CsharpHeap
 
         private Node MoveToNodeByPath(int[] path)
         {
-            Node mover = tree;
+            Node mover = root;
             for (int i = 0; i < path.Length; i++)
             {
-                T x = mover.Value;
                 // If value is even then move to right child, if is odd, move to left child
                 if (path[i] % 2 == 0) 
                     mover = mover.ChildRight;
                 else 
                     mover = mover.ChildLeft;
-                x = mover.Value;
             }
             return mover;
         }
@@ -115,31 +113,103 @@ namespace CsharpHeap
 
         public override T Parent()
         {
-            if(current.Parent != null)
+            if (current != null)
             {
-                current = current.Parent;
-                return current.Value;
+                if (current.Parent != null)
+                {
+                    current = current.Parent;
+                    return current.Value;
+                }
             }
             return default(T);
         }
 
         public override T Pop()
         {
-            throw new NotImplementedException();
+            if(root != null)
+            {
+                if(Count == 1)
+                {
+                    T value = root.Value;
+                    root = null;
+                    Count--;
+                    Level = -1;
+                    lastIndex = -1;
+                    return value;
+                }
+                else
+                {
+                    T value = root.Value;
+                    int[] path = PathFromRootToIndex(lastIndex);
+                    Node node = MoveToNodeByPath(path);
+
+                    (root.Value, node.Value) = (node.Value, root.Value);
+                    if(lastIndex % 2 == 0)
+                    {
+                        node.Parent.ChildRight = null;
+                    }
+                    else
+                    {
+                        node.Parent.ChildLeft = null;
+                    }
+
+                    Node nextParent = root;
+                    Node child;
+                    do
+                    {
+                        if (nextParent.ChildLeft == null) break;
+                        child = nextParent.ChildLeft;
+                        if (minMax == MinMax.MAX)
+                        {
+                            if (nextParent.ChildRight != null &&
+                                nextParent.ChildRight.Value.CompareTo(child.Value) > 0)
+                            {
+                                child = nextParent.ChildRight;
+                            }
+                        }
+                        else
+                        {
+                            if (nextParent.ChildRight != null &&
+                                nextParent.ChildRight.Value.CompareTo(child.Value) < 0)
+                            {
+                                child = nextParent.ChildRight;
+                            }
+                        }
+                        nextParent = child;
+
+                    } while (Swap(child));
+
+                    Count--;
+                    lastIndex--;
+                    UpdateLevel();
+                    return value;
+                }
+
+            }
+            return default(T);
         }
 
         public override int Push(T obj)
         {
-            if (tree == null)
+            if (root == null)
             {
-                tree = new Node(0, obj);
-                current = tree;
+                root = new Node(++lastIndex, obj);
+                current = root;
                 Count++;
                 UpdateLevel();
             }
             else
             {
-                Node last = MoveToLastNode();
+                Node last;
+                if (Count > 2)
+                {
+                    int[] path = PathFromRootToIndex(GetParentIndex(lastIndex + 1));
+                    last = MoveToNodeByPath(path);
+                }
+                else
+                {
+                    last = root;
+                }
                 Node node;
                 if (last.ChildLeft == null)
                 {
@@ -158,13 +228,9 @@ namespace CsharpHeap
                 UpdateLevel();
                 while (Swap(node))
                 {
-                    if ((node.ChildLeft != null && !Swap(node.ChildLeft)) || 
-                        (node.ChildRight != null && !Swap(node.ChildRight)))
-                    {
-                        if (node.Parent != null)
-                            node = node.Parent;
-                        else break;
-                    }
+                     if (node.Parent != null)
+                        node = node.Parent;
+                     else break;
                 }
             }
 
@@ -202,13 +268,9 @@ namespace CsharpHeap
             return true;
         }
 
-        private Node MoveToLastNode(Node node)
-        {
-        }
-
         private Node MoveToEndNode()
         {
-            Node node = tree;
+            Node node = root;
 
             while (node.ChildRight != null) node = node.ChildRight;
             if (node.ChildLeft != null) node = node.ChildLeft;
@@ -218,9 +280,9 @@ namespace CsharpHeap
 
         private void UpdateLevel()
         {
-            if(tree != null)
+            if(root != null)
             {
-                Node node = tree;
+                Node node = root;
                 int lvl = 0;
                 while(node.ChildLeft != null)
                 {
@@ -240,7 +302,7 @@ namespace CsharpHeap
                 Node node = MoveToNodeByPath(path);
                 return node.Value;
             }
-            return tree.Value;
+            return root.Value;
         }
 
         public class Node
@@ -294,16 +356,16 @@ namespace CsharpHeap
             #region Static_Methods
 
             /// <summary>
-            /// Create Node tree based on values in array.
+            /// Create Node root based on values in array.
             /// </summary>
             /// <param name="values">Values in array</param>
-            /// <returns>Values mapped to Node tree</returns>
+            /// <returns>Values mapped to Node root</returns>
             public static Node CreateTree(params T[] values)
             {
                 Node root = null;
                 if (values.Length > 0) { // If values have any element
                     root = new Node(0, values[0]); // create root node
-                    MakeChildren(root, 0, values); // Start setting children in tree
+                    MakeChildren(root, 0, values); // Start setting children in root
                 }
                 return root; // Return root element
             }
@@ -321,14 +383,14 @@ namespace CsharpHeap
                 {
                     node.ChildLeft = new Node(2 * k + 1,values[2 * k + 1]); // Create left child node
                     node.ChildLeft.Parent = node; // Set parent for left child node
-                    MakeChildren(node.ChildLeft, 2 * k + 1, values); // Go to next children in tree
+                    MakeChildren(node.ChildLeft, 2 * k + 1, values); // Go to next children in root
                 }
                 // Right child formula: 2k+2
                 if(2 * k + 2 < values.Length)
                 {
                     node.ChildRight = new Node(2 * k + 2, values[2 * k + 2]); // Create right child node
                     node.ChildRight.Parent = node; // Set parent for right child node
-                    MakeChildren(node.ChildRight, 2 * k + 2, values);// Go to next children in tree
+                    MakeChildren(node.ChildRight, 2 * k + 2, values);// Go to next children in root
                 }
             }
 
@@ -337,10 +399,10 @@ namespace CsharpHeap
             #region Methods
 
             /// <summary>
-            /// Check if node is part of Heap tree. That's mean if right child exists, left child must exists too, 
+            /// Check if node is part of Heap root. That's mean if right child exists, left child must exists too, 
             /// otherwise right child must be null. Can not be situation where right child exist but left child not exists.
             /// </summary>
-            /// <returns>True if this node is part of heap tree, false in otherwaise</returns>
+            /// <returns>True if this node is part of heap root, false in otherwaise</returns>
             public Boolean IsHeapNode()
             {
                 return 
