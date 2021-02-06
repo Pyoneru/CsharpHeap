@@ -31,7 +31,7 @@ namespace CsharpHeapTests
         [TestMethod]
         public void ArgConstructorNodeTest()
         {
-            Node node = new Node(5);
+            Node node = new Node(0, 5);
 
             Assert.AreEqual(5, node.Value);
         }
@@ -43,7 +43,7 @@ namespace CsharpHeapTests
         [TestMethod]
         public void EmptyContructorNodeTest()
         {
-            Node node = new Node();
+            Node node = new Node(0);
 
             Assert.AreEqual(default(int), node.Value);
         }
@@ -105,6 +105,25 @@ namespace CsharpHeapTests
             Assert.IsNull(tree);
         }
 
+        /// <summary>
+        /// Test correct setting indicies
+        /// </summary>
+        [TestMethod]
+        public void CreateTreeIndicesTest()
+        {
+            int[] val = { 5, 3, 5, 1 };
+
+            Node tree = Node.CreateTree(val);
+
+            Assert.AreEqual(0, tree.Index);
+
+            Assert.AreEqual(1, tree.ChildLeft.Index);
+
+            Assert.AreEqual(2, tree.ChildRight.Index);
+
+            Assert.AreEqual(3, tree.ChildLeft.ChildLeft.Index);
+        }
+
         #endregion
 
         #region IsHeapNode Test
@@ -115,9 +134,9 @@ namespace CsharpHeapTests
         [TestMethod]
         public void IsHeapNodeBothChildrenTest()
         {
-            Node tree = new Node(5);
-            tree.ChildLeft = new Node(1);
-            tree.ChildRight = new Node(2);
+            Node tree = new Node(0, 5);
+            tree.ChildLeft = new Node(1, 1);
+            tree.ChildRight = new Node(2, 2);
 
             Assert.IsTrue(tree.IsHeapNode());
         }
@@ -128,8 +147,8 @@ namespace CsharpHeapTests
         [TestMethod]
         public void IsHeapNodeWithLeftChildOnlyTest()
         {
-            Node tree = new Node(5);
-            tree.ChildLeft = new Node(1);
+            Node tree = new Node(0, 5);
+            tree.ChildLeft = new Node(1, 1);
 
             Assert.IsTrue(tree.IsHeapNode());
         }
@@ -139,8 +158,8 @@ namespace CsharpHeapTests
         /// </summary>
         public void IsNotHeapNodeWithRightChildOnlyTest()
         {
-            Node tree = new Node(5);
-            tree.ChildRight = new Node(2);
+            Node tree = new Node(0, 5);
+            tree.ChildRight = new Node(2, 2);
 
             Assert.IsFalse(tree.IsHeapNode());
         }
