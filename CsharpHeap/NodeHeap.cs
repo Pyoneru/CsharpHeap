@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace CsharpHeap
 {
+    /// <summary>
+    /// Enum for setting if heap is Max or Min.
+    /// Enum is not inside class becouse it's more comfortable to use.
+    /// MinMax.Max instead NodeHeap<int>.MinMax.Max.
+    /// </summary>
     public enum MinMax
     {
         MIN, MAX
@@ -13,18 +18,44 @@ namespace CsharpHeap
 
     public class NodeHeap<T> : Heap<T> where T : IComparable
     {
+        #region Fields
+
+        /// <summary>
+        /// Set if heap is max or min.
+        /// </summary>
         protected MinMax minMax;
+
+        /// <summary>
+        /// Refernec to root object
+        /// </summary>
         protected Node root;
+
+        /// <summary>
+        /// Internal pointer to current node, it used in Moving Methods
+        /// </summary>
         protected Node current;
+
+        /// <summary>
+        /// Save last index of node.
+        /// </summary>
         protected int lastIndex;
 
+        #endregion Fields
+
+        #region Properties
+
         public override int Count { get; protected set; }
+
         public override int Level { get; protected set; }
 
         public override int MaxSize { 
             get => throw new NotImplementedException("Proszę tego nie używać"); 
             set => throw new NotImplementedException("Proszę tego nie używać"); 
-        }                                                                                                                                                                                                                                                                                                                                                                                                                                                             // Joke
+        }
+
+        #endregion Properties
+
+        #region Constructors
 
         public NodeHeap(MinMax minMax)
         {
@@ -35,55 +66,9 @@ namespace CsharpHeap
             this.lastIndex = -1;
         }
 
-        public T this[int index]
-        {
-            get {
-                if (index == 0)
-                    return root.Value;
-                else
-                {
-                    int[] path = PathFromRootToIndex(index);
+        #endregion
 
-                    Node node = MoveToNodeByPath(path);
-                    return node.Value;
-                }
-            }
-        }
-
-        private int[] PathFromRootToIndex(int index)
-        {
-            int level = (int)Math.Log(
-                (index %2 == 1) ? index +1 : index, 
-                2
-                );
-            int[] path = new int[level]; // if number is even then move right, otherwise move left
-
-            path[level - 1] = index;
-            for (int i = level - 2; i >= 0; i--)
-            {
-                path[i] = GetParentIndex(path[i + 1]);
-            }
-            return path;
-        }
-
-        private Node MoveToNodeByPath(int[] path)
-        {
-            Node mover = root;
-            for (int i = 0; i < path.Length; i++)
-            {
-                // If value is even then move to right child, if is odd, move to left child
-                if (path[i] % 2 == 0) 
-                    mover = mover.ChildRight;
-                else 
-                    mover = mover.ChildLeft;
-            }
-            return mover;
-        }
-
-        private int GetParentIndex(int index)
-        {
-            return (int)Math.Floor((index - 1) / 2.0);
-        }
+        #region Moving Methods
 
         public override T Child(ChildSide side)
         {
@@ -123,6 +108,10 @@ namespace CsharpHeap
             }
             return default(T);
         }
+
+        #endregion Moving Methods
+
+        #region Modify Methods
 
         public override T Pop()
         {
@@ -243,6 +232,41 @@ namespace CsharpHeap
             throw new NotImplementedException("Proszę tego nie używać.");
         }
 
+        public override T Seek(int index)
+        {
+            if (index != 0)
+            {
+                int[] path = PathFromRootToIndex(index);
+
+                Node node = MoveToNodeByPath(path);
+                return node.Value;
+            }
+            return root.Value;
+        }
+
+        /// <summary>
+        /// Acronym to Seek method. Instead invoke Seek method you can use indexer ([index]).
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public T this[int index]
+        {
+            get
+            {
+                return Seek(index);
+            }
+        }
+
+        #endregion Modify Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Compare node with his parent(if exists), if CompareTo return true(depend on MinMax field, less or greater) swap values otherwise return false.
+        /// This method swap onyl values between two nodes, not reference to them.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns>True if values were swapped, false in otherwise.</returns>
         private bool Swap(Node target)
         {
             if (target.Parent == null) return false;
@@ -268,16 +292,9 @@ namespace CsharpHeap
             return true;
         }
 
-        private Node MoveToEndNode()
-        {
-            Node node = root;
-
-            while (node.ChildRight != null) node = node.ChildRight;
-            if (node.ChildLeft != null) node = node.ChildLeft;
-
-            return node;
-        }
-
+        /// <summary>
+        /// If node was modify, calculate level tree.
+        /// </summary>
         private void UpdateLevel()
         {
             if(root != null)
@@ -293,18 +310,61 @@ namespace CsharpHeap
             }
         }
 
-        public override T Seek(int index)
+        /// <summary>
+        /// Create Indicies Path from Root node to target node. 
+        /// If index in path is odd then move to Left child, if index is even then move to Right child.
+        /// </summary>
+        /// <param name="index">Target node</param>
+        /// <returns>Path from root node to target node(by node index)</returns>
+        private int[] PathFromRootToIndex(int index)
         {
-            if (index != 0)
-            {
-                int[] path = PathFromRootToIndex(index);
+            int level = (int)Math.Log(
+                (index % 2 == 1) ? index + 1 : index,
+                2
+                );
+            int[] path = new int[level]; // if number is even then move right, otherwise move left
 
-                Node node = MoveToNodeByPath(path);
-                return node.Value;
+            path[level - 1] = index;
+            for (int i = level - 2; i >= 0; i--)
+            {
+                path[i] = GetParentIndex(path[i + 1]);
             }
-            return root.Value;
+            return path;
         }
 
+        /// <summary>
+        /// Move to node with given path and return it.
+        /// </summary>
+        /// <param name="path">Path created by PathFromRootToIndex method</param>
+        /// <returns>Return node</returns>
+        private Node MoveToNodeByPath(int[] path)
+        {
+            Node mover = root;
+            for (int i = 0; i < path.Length; i++)
+            {
+                // If value is even then move to right child, if is odd, move to left child
+                if (path[i] % 2 == 0)
+                    mover = mover.ChildRight;
+                else
+                    mover = mover.ChildLeft;
+            }
+            return mover;
+        }
+
+        /// <summary>
+        /// Calculate index of parent node by given child index;
+        /// </summary>
+        /// <param name="index">Child index</param>
+        /// <returns>Parent index</returns>
+        private int GetParentIndex(int index)
+        {
+            return (int)Math.Floor((index - 1) / 2.0);
+        }
+
+
+        #endregion Private Methods
+
+        #region Internal Node class
         public class Node
         {
             #region Properties
@@ -413,5 +473,6 @@ namespace CsharpHeap
 
             #endregion
         }
+        #endregion Internal Node class
     }
 }
