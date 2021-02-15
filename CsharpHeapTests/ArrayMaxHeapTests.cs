@@ -5,7 +5,7 @@ using System;
 namespace CsharpHeapTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ArrayMaxHeapTests
     {
         [TestMethod]
         public void TestMethod1()
