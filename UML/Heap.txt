@@ -1,0 +1,13 @@
++ChildSide: enum
+<<+get>> <<#set>> Count: int
+<<+get>> <<#set>> Level: int
+<<+get>> <<+set>> MaxSize: int
+
++Child(side: ChildSide)
++Current(): int
++MoveOn(index: int): int
++Parent(): T
++Pop()
++Push(obj: T)
++Push(obj: T, index: int)
++Seek(index: int)
