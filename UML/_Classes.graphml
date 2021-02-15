@@ -13,10 +13,9 @@
   <key attr.name="description" attr.type="string" for="edge" id="d9"/>
   <key for="edge" id="d10" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
-    <data key="d0"/>
+    <data key="d0" xml:space="preserve"/>
     <node id="n0">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="196.98400000000004" width="166.3280000000001" x="626.0719999999999" y="135.0"/>
@@ -42,33 +41,48 @@
     </node>
     <node id="n1">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="196.98400000000004" width="228.7920000000001" x="853.2360000000001" y="394.2000000000001"/>
+          <y:Geometry height="402.7653333333333" width="228.7920000000001" x="853.2359999999999" y="291.3093333333335"/>
           <y:Fill color="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Calibri Light" fontSize="24" fontStyle="bolditalic" hasBackgroundColor="false" hasLineColor="false" height="28.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="149.27734375" x="39.75732812500004" xml:space="preserve" y="3.0">ArrayMaxHeap<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
-            <y:AttributeLabel xml:space="preserve">+ChildSide: enum
+            <y:AttributeLabel xml:space="preserve">-Items: T[]
 &lt;&lt;+get&gt;&gt; &lt;&lt;#set&gt;&gt; Count: int
 &lt;&lt;+get&gt;&gt; &lt;&lt;#set&gt;&gt; Level: int
 &lt;&lt;+get&gt;&gt; &lt;&lt;+set&gt;&gt; MaxSize: int</y:AttributeLabel>
-            <y:MethodLabel xml:space="preserve">+Child(side: ChildSide)
-+Current(): int
-+MoveOn(index: int): int
-+Parent()
-+Pop()
-+Push(obj: T)
-+Push(obj: T, index: int)
-+Seek(index: int)</y:MethodLabel>
+            <y:MethodLabel xml:space="preserve">&lt;&lt;create&gt;&gt; +ArrayMinHeap()
+&lt;&lt;indexer&gt;&gt; +this[index: int]: T
+-ExpandHeap()
+-HasElementAtIndex(index: int): bool
+-HeapifyDown()
+-HeapifyUp()
+-Swap(firstIndex: int, secondIndex: int)
+-UpdateHeapLevel()
++Child(side: ChildSide) // not implemented
++Current(): int // not implemented
++GetLeftChild(parentIndex: int): T
++GetLeftChildIndex(parentIndex: int): int
++GetParent(childIndex: int): T
++GetParentIndex(childIndex: int): int
++GetRightChild(parentIndex: int): T
++GetRightChildIndex(parentIndex: int): int
++HasLeftChild(parentIndex: int): bool
++HasParent(childIndex: int): bool
++HasRightChild(parentIndex: int): bool
++MoveOn(index: int): int // not implemented
++Parent(): T // not implemented
++Pop(): T
++Push(item: T): int
++Push(obj: T, index: int) // not implemented
++Seek(index: int): T</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n2">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="91.38400000000004" width="166.3280000000001" x="626.0719999999998" y="499.80000000000007"/>
@@ -84,7 +98,6 @@
     </node>
     <node id="n3">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="27.384000000000043" width="70.32800000000009" x="674.0719999999999" y="425.40000000000015"/>
@@ -100,7 +113,6 @@
     </node>
     <node id="n4">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="402.7653333333333" width="228.79200000000003" x="336.44399999999973" y="291.3093333333335"/>
@@ -142,7 +154,6 @@
       </data>
     </node>
     <edge id="e0" source="n4" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -153,7 +164,6 @@
       </data>
     </edge>
     <edge id="e1" source="n1" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -164,7 +174,6 @@
       </data>
     </edge>
     <edge id="e2" source="n3" target="n2">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -175,7 +184,6 @@
       </data>
     </edge>
     <edge id="e3" source="n3" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -187,7 +195,6 @@
       </data>
     </edge>
     <edge id="e4" source="n3" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -199,7 +206,6 @@
       </data>
     </edge>
     <edge id="e5" source="n3" target="n4">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

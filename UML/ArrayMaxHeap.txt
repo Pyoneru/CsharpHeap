@@ -1,0 +1,30 @@
+-Items: T[]
+<<+get>> <<#set>> Count: int
+<<+get>> <<#set>> Level: int
+<<+get>> <<+set>> MaxSize: int
+
+<<create>> +ArrayMinHeap()
+<<indexer>> +this[index: int]: T
+-ExpandHeap()
+-HasElementAtIndex(index: int): bool
+-HeapifyDown()
+-HeapifyUp()
+-Swap(firstIndex: int, secondIndex: int)
+-UpdateHeapLevel()
++Child(side: ChildSide) // not implemented
++Current(): int // not implemented
++GetLeftChild(parentIndex: int): T
++GetLeftChildIndex(parentIndex: int): int
++GetParent(childIndex: int): T
++GetParentIndex(childIndex: int): int
++GetRightChild(parentIndex: int): T
++GetRightChildIndex(parentIndex: int): int
++HasLeftChild(parentIndex: int): bool
++HasParent(childIndex: int): bool
++HasRightChild(parentIndex: int): bool
++MoveOn(index: int): int // not implemented
++Parent(): T // not implemented
++Pop(): T
++Push(item: T): int
++Push(obj: T, index: int) // not implemented
++Seek(index: int): T
